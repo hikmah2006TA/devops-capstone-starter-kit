@@ -6,7 +6,7 @@ global:
 vote:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_vote
+    repository: hikmah2006/examplevotingapp_vote
     tag: "latest"
     pullPolicy: IfNotPresent
   service:
@@ -18,7 +18,7 @@ vote:
 result:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_result
+    repository: hikmah2006/examplevotingapp_result
     tag: "latest"
     pullPolicy: IfNotPresent
   service:
@@ -30,7 +30,7 @@ result:
 worker:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_worker
+    repository: hikmah2006/examplevotingapp_worker
     tag: "latest"
     pullPolicy: IfNotPresent
 
