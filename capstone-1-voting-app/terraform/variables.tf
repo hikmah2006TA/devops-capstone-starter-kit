@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for the EKS cluster and resources"
   type        = string
-  default     = "eu-west-1"
+  default     = "eu-north-1"
 }
 
 variable "cluster_name" {
@@ -13,7 +13,7 @@ variable "cluster_name" {
 variable "kubernetes_version" {
   description = "Kubernetes version for the EKS cluster"
   type        = string
-  default     = "1.30"
+  default     = "1.35"
 }
 
 variable "node_instance_types" {
