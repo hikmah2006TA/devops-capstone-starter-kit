@@ -20,14 +20,24 @@
   "panels": [
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
       "id": 100,
       "title": "Core Services Overview (Web, Catalogue, Cart, Payment)",
       "type": "row"
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 1 },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
       "id": 1,
       "title": "Rate: Network Throughput / Request Rate (Receive Bytes/sec)",
       "type": "timeseries",
@@ -51,15 +61,20 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 1 },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
       "id": 2,
-      "title": "Errors: Container Restart Count & Pod Health",
+      "title": "Network Transmit Throughput (Bytes/sec)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_status_restarts_total{namespace=\"robot-shop\", pod=~\"(web|catalogue|cart|payment).*\"}) by (pod)",
-          "legendFormat": "{{pod}} restarts",
+          "expr": "sum(rate(container_network_transmit_bytes_total{namespace=\"robot-shop\", pod=~\"(web|catalogue|cart|payment).*\"}[1m])) by (pod)",
+          "legendFormat": "{{pod}} (tx bytes/s)",
           "refId": "A"
         }
       ],
@@ -68,13 +83,18 @@
           "custom": {
             "drawStyle": "bars"
           },
-          "unit": "short"
+          "unit": "Bps"
         }
       }
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 8 },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
       "id": 3,
       "title": "Duration / Latency: CPU Utilization (Cores)",
       "type": "timeseries",
@@ -98,7 +118,12 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 8 },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
       "id": 4,
       "title": "Duration / Saturation: Memory Working Set (MB)",
       "type": "timeseries",
@@ -124,7 +149,11 @@
   "refresh": "5s",
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["robot-shop", "red-metrics", "capstone2"],
+  "tags": [
+    "robot-shop",
+    "red-metrics",
+    "capstone2"
+  ],
   "time": {
     "from": "now-15m",
     "to": "now"
