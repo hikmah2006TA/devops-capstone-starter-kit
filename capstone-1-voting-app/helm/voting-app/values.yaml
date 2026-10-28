@@ -7,7 +7,7 @@ vote:
   replicaCount: 1
   image:
     repository: hikmah2006/examplevotingapp_vote
-    tag: "latest"
+    tag: "23cf6e559659838062216cdcf5ceb046adf6439c"
     pullPolicy: IfNotPresent
   service:
     type: NodePort
@@ -19,7 +19,7 @@ result:
   replicaCount: 1
   image:
     repository: hikmah2006/examplevotingapp_result
-    tag: "latest"
+    tag: "23cf6e559659838062216cdcf5ceb046adf6439c"
     pullPolicy: IfNotPresent
   service:
     type: NodePort
@@ -31,7 +31,7 @@ worker:
   replicaCount: 1
   image:
     repository: hikmah2006/examplevotingapp_worker
-    tag: "latest"
+    tag: "23cf6e559659838062216cdcf5ceb046adf6439c"
     pullPolicy: IfNotPresent
 
 redis:
