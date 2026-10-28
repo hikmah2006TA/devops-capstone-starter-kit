@@ -21,4 +21,11 @@ If these templates saved you time, helped you solve tricky EKS issues, or made y
 - **Forking 🍴** this repository to use and customize the templates in your own projects.
 - [Following me on GitHub](https://github.com/tamecalm) for more cloud, Kubernetes, and DevOps resources.
 
+
+## Capstone Validation
+
+- Deployed the Voting App to AWS EKS using Helm.
+- Verified voting and result updates.
+- Tested Helm upgrade and rollback.
+- Configured GitHub Actions for Trivy scanning and Docker image builds.
 Good luck with your capstone!
