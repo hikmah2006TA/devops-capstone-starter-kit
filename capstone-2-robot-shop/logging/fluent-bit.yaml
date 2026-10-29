@@ -40,10 +40,13 @@ data:
         Log_Level     info
         Daemon        off
         Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
 
     [INPUT]
         Name              tail
-        Tag               kube.*
+        Tag               kube.var.log.containers.*
         Path              /var/log/containers/*.log
         Parser            cri
         DB                /var/log/flb_kube.db
