@@ -39,7 +39,7 @@
         "y": 1
       },
       "id": 1,
-      "title": "Rate: Network Throughput / Request Rate (Receive Bytes/sec)",
+      "title": "Network Receive Throughput (Bytes/sec)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
@@ -96,7 +96,7 @@
         "y": 8
       },
       "id": 3,
-      "title": "Duration / Latency: CPU Utilization (Cores)",
+      "title": "CPU Utilization (Cores)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
@@ -125,7 +125,7 @@
         "y": 8
       },
       "id": 4,
-      "title": "Duration / Saturation: Memory Working Set (MB)",
+      "title": "Memory Working Set (MB)",
       "type": "timeseries",
       "datasource": "Prometheus",
       "targets": [
@@ -158,6 +158,6 @@
     "from": "now-15m",
     "to": "now"
   },
-  "title": "Robot Shop - RED Metrics (Web, Catalogue, Cart, Payment)",
+  "title": "Robot Shop - Resource Metrics (Web, Catalogue, Cart, Payment)",
   "uid": "robot-shop-red"
 }
