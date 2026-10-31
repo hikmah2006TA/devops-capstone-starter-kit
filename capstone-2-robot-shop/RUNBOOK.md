@@ -49,3 +49,27 @@ The alert rules in `alerts/robot-shop-slo-rules.yaml` are proposed configuration
 - Validate the alert expressions and deploy them only after a compatible alert-rule mechanism is available.
 - Confirm actual deployment names and selectors before running workload-specific commands.
 - Avoid deleting or restarting production resources without understanding the impact.
+## Prometheus CPU Alert
+
+### Alert name
+`RobotShopHighCPUUsage`
+
+### Purpose
+Detects high CPU usage in Robot Shop application pods.
+
+### Trigger condition
+The alert triggers when a Robot Shop pod uses more than 0.5 CPU cores continuously for 5 minutes.
+
+### Severity
+Warning
+
+### Current status
+The alert rule is loaded in Prometheus and currently inactive because CPU usage is below the configured threshold.
+
+### Response procedure
+1. Open the Robot Shop Monitoring Dashboard in Grafana.
+2. Identify the affected pod.
+3. Check its CPU and memory usage.
+4. Inspect application logs in Loki for unusual activity.
+5. Check Jaeger traces if request delays are suspected.
+6. Record findings and escalate if the issue persists.
