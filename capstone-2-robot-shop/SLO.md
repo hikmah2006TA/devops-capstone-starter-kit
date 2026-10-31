@@ -2,43 +2,170 @@
 
 ## 1. Purpose
 
-This document defines a proposed availability Service Level Objective (SLO) for Robot Shop and explains how its error budget will guide reliability decisions.
+This document defines the availability Service Level Objective (SLO) for Robot Shop and explains how its error budget will guide reliability decisions and incident response.
 
 ## 2. Service Level Objective
 
 - **Service:** Robot Shop
-- **Objective:** 99% availability
+- **Availability target:** 99%
 - **Measurement window:** Rolling 30 days
-- **Availability indicator:** Successful eligible user requests divided by all eligible user requests.
-- **Status:** Proposed. Application-level request and error metrics must be validated before compliance can be measured reliably.
+- **Service Level Indicator (SLI):** Successful eligible requests divided by total eligible requests.
+- **Status:** Proposed; full compliance measurement is pending validated application-level request metrics.
 
-## 3. Error Budget
+## 3. Availability Monitoring
 
-The error budget is the portion of the measurement window during which the service may be unavailable while still meeting the SLO.
+Robot Shop availability is monitored using Prometheus and Blackbox Exporter.
 
-At 99% availability over 30 days:
+The current black-box monitoring checks:
 
-- Total time: 720 hours
-- Allowed unavailability: 1% of 720 hours
-- Error budget: 7.2 hours, or 7 hours and 12 minutes
+- **Web endpoint:** `http://web.robot-shop.svc.cluster.local:8080/`
+- **Payment metrics endpoint:** `http://payment.robot-shop.svc.cluster.local:8080/metrics`
 
-This time-based calculation is illustrative. The actual request-based error budget must be calculated from eligible request counts once suitable application metrics are available.
+Both endpoints currently return successful HTTP 200 responses.
 
-## 4. Error Budget Policy
+Prometheus collects probe results every 30 seconds. Endpoint-down alerts are configured to trigger after 2 minutes of continuous probe failure.
 
-1. Monitor availability and error-budget consumption when reliable metrics are available.
-2. Investigate incidents that cause failed requests or reduce availability.
-3. When the error budget is nearly exhausted, prioritise reliability fixes and review the risk of non-essential changes.
-4. When the error budget is exhausted, pause high-risk releases until the service has improved, except for urgent security or reliability fixes.
-5. Review incidents without blame and record corrective actions.
-6. Reassess the SLO periodically using service behaviour and user needs.
+**Measurement limitation:** The payment metrics endpoint check confirms that the endpoint is reachable; it does not confirm successful payment transactions. Application-level request, error and latency metrics are still required for a complete user-request-based SLI.
 
-## 5. Monitoring and Validation
+Prometheus currently has 6 hours of data retention. Therefore, a rolling 30-day availability measurement is not yet available.
 
-The current monitoring setup includes Prometheus, Grafana, Loki, Fluent Bit, Jaeger, and an OpenTelemetry Collector.
+## 4. Error Budget
 
-The existing dashboard primarily displays resource metrics. Reliable application-level request rate, error rate, and latency metrics still need to be established. The proposed SLO must not be reported as achieved until its measurement method is implemented and validated.
+The error budget represents the allowable unavailability within the SLO measurement window.
 
-## 6. Review
+For a 99% availability target over 30 days:
 
-Review this policy after the application metrics and alerting rules have been validated. Update the target and error-budget policy if operational evidence supports a change.
+- Total measurement period: 720 hours
+- Allowed unavailability: 1%
+- Error budget: 7.2 hours (7 hours and 12 minutes)
+
+This is an illustrative time-based calculation. Actual request-based error-budget consumption must be calculated when suitable application metrics are available.
+
+## 5. Error Budget Policy
+
+1. Monitor availability and error-budget consumption using reliable metrics.
+2. Investigate incidents that cause endpoint failures or unsuccessful user requests.
+3. When the error budget is nearly exhausted, prioritise reliability improvements.
+4. When the error budget is exhausted, pause high-risk releases except urgent security and reliability fixes.
+5. Record incidents, root causes, mitigation steps and corrective actions.
+6. Review the SLO periodically based on application performance and user needs.
+
+## 6. Alerting Strategy
+
+Prometheus currently has three alert rules:
+
+- `RobotShopHighCPUUsage` – detects sustained high CPU usage.
+- `RobotShopWebEndpointDown` – detects web endpoint probe failures.
+- `RobotShopPaymentMetricsEndpointDown` – detects payment metrics endpoint probe failures.
+
+The two endpoint alerts trigger after 2 minutes of continuous failure.
+
+The alerts are evaluated by Prometheus. Slack notification delivery is not yet configured because Alertmanager is currently disabled.
+
+## 7. Monitoring Tools
+
+The monitoring architecture uses:
+
+- **Prometheus:** Metrics collection and alert evaluation.
+- **Grafana:** Monitoring dashboards and visualisation.
+- **Blackbox Exporter:** HTTP endpoint availability checks.
+- **Fluent Bit:** Container log collection.
+- **Loki:** Centralised log storage.
+- **OpenTelemetry Collector:** Telemetry collection and forwarding.
+- **Jaeger:** Distributed trace visualisation.
+
+## 8. Review and Improvement
+
+The SLO policy will be reviewed after:
+
+1. Application-level request, error and latency metrics are validated.
+2. A suitable method for retaining 30 days of monitoring data is established.
+3. Slack alert notifications are configured and tested.
+4. An incident simulation is completed and documented.
+
+The 99% availability target remains proposed until the measurement system can reliably calculate actual service availability.# Robot Shop SLO and Error Budget Policy
+
+## 1. Purpose
+
+This document defines the availability Service Level Objective (SLO) for Robot Shop and explains how its error budget will guide reliability decisions and incident response.
+
+## 2. Service Level Objective
+
+- **Service:** Robot Shop
+- **Availability target:** 99%
+- **Measurement window:** Rolling 30 days
+- **Service Level Indicator (SLI):** Successful eligible requests divided by total eligible requests.
+- **Status:** Proposed; full compliance measurement is pending validated application-level request metrics.
+
+## 3. Availability Monitoring
+
+Robot Shop availability is monitored using Prometheus and Blackbox Exporter.
+
+The current black-box monitoring checks:
+
+- **Web endpoint:** `http://web.robot-shop.svc.cluster.local:8080/`
+- **Payment metrics endpoint:** `http://payment.robot-shop.svc.cluster.local:8080/metrics`
+
+Both endpoints currently return successful HTTP 200 responses.
+
+Prometheus collects probe results every 30 seconds. Endpoint-down alerts are configured to trigger after 2 minutes of continuous probe failure.
+
+**Measurement limitation:** The payment metrics endpoint check confirms that the endpoint is reachable; it does not confirm successful payment transactions. Application-level request, error and latency metrics are still required for a complete user-request-based SLI.
+
+Prometheus currently has 6 hours of data retention. Therefore, a rolling 30-day availability measurement is not yet available.
+
+## 4. Error Budget
+
+The error budget represents the allowable unavailability within the SLO measurement window.
+
+For a 99% availability target over 30 days:
+
+- Total measurement period: 720 hours
+- Allowed unavailability: 1%
+- Error budget: 7.2 hours (7 hours and 12 minutes)
+
+This is an illustrative time-based calculation. Actual request-based error-budget consumption must be calculated when suitable application metrics are available.
+
+## 5. Error Budget Policy
+
+1. Monitor availability and error-budget consumption using reliable metrics.
+2. Investigate incidents that cause endpoint failures or unsuccessful user requests.
+3. When the error budget is nearly exhausted, prioritise reliability improvements.
+4. When the error budget is exhausted, pause high-risk releases except urgent security and reliability fixes.
+5. Record incidents, root causes, mitigation steps and corrective actions.
+6. Review the SLO periodically based on application performance and user needs.
+
+## 6. Alerting Strategy
+
+Prometheus currently has three alert rules:
+
+- `RobotShopHighCPUUsage` – detects sustained high CPU usage.
+- `RobotShopWebEndpointDown` – detects web endpoint probe failures.
+- `RobotShopPaymentMetricsEndpointDown` – detects payment metrics endpoint probe failures.
+
+The two endpoint alerts trigger after 2 minutes of continuous failure.
+
+The alerts are evaluated by Prometheus. Slack notification delivery is not yet configured because Alertmanager is currently disabled.
+
+## 7. Monitoring Tools
+
+The monitoring architecture uses:
+
+- **Prometheus:** Metrics collection and alert evaluation.
+- **Grafana:** Monitoring dashboards and visualisation.
+- **Blackbox Exporter:** HTTP endpoint availability checks.
+- **Fluent Bit:** Container log collection.
+- **Loki:** Centralised log storage.
+- **OpenTelemetry Collector:** Telemetry collection and forwarding.
+- **Jaeger:** Distributed trace visualisation.
+
+## 8. Review and Improvement
+
+The SLO policy will be reviewed after:
+
+1. Application-level request, error and latency metrics are validated.
+2. A suitable method for retaining 30 days of monitoring data is established.
+3. Slack alert notifications are configured and tested.
+4. An incident simulation is completed and documented.
+
+The 99% availability target remains proposed until the measurement system can reliably calculate actual service availability.
