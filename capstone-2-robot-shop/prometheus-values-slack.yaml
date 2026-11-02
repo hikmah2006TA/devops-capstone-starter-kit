@@ -1,0 +1,126 @@
+alertmanager:
+  enabled: true
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  extraSecretMounts:
+    - name: slack-webhook
+      mountPath: /etc/alertmanager/secrets
+      subPath: ""
+      secretName: slack-webhook
+      readOnly: true
+  config:
+    enabled: true
+    global: {}
+    route:
+      receiver: robot-shop-slack
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 3h
+    receivers:
+      - name: robot-shop-slack
+        slack_configs:
+          - channel: "#robot-shop-alerts"
+            api_url_file: /etc/alertmanager/secrets/slack_api_url
+            send_resolved: true
+extraScrapeConfigs: |
+  - job_name: robot-shop-app-metrics
+    scrape_interval: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - cart.robot-shop.svc.cluster.local:8080
+        labels:
+          namespace: robot-shop
+          service: cart
+      - targets:
+          - payment.robot-shop.svc.cluster.local:8080
+        labels:
+          namespace: robot-shop
+          service: payment
+
+  - job_name: blackbox-web
+    scrape_interval: 30s
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://web.robot-shop.svc.cluster.local:8080/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+
+  - job_name: blackbox-payment
+    scrape_interval: 30s
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://payment.robot-shop.svc.cluster.local:8080/metrics
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+kube-state-metrics:
+  enabled: false
+prometheus-node-exporter:
+  enabled: false
+prometheus-pushgateway:
+  enabled: false
+server:
+  persistentVolume:
+    enabled: false
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 300m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  retention: 6h
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: robot-shop-alerts
+        rules:
+          - alert: RobotShopHighCPUUsage
+            expr: sum by (pod) (rate(container_cpu_usage_seconds_total{namespace="robot-shop",pod=~"(web|catalogue|cart|payment).*",container!=""}[5m])) > 0.5
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High CPU usage in Robot Shop"
+              description: "A Robot Shop pod has used more than 0.5 CPU cores for 5 minutes."
+          - alert: RobotShopWebEndpointDown
+            expr: probe_success{job="blackbox-web"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Robot Shop web endpoint is down"
+              description: "The Robot Shop web endpoint has failed its HTTP probe for 2 minutes."
+
+          - alert: RobotShopPaymentMetricsEndpointDown
+            expr: probe_success{job="blackbox-payment"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Robot Shop payment metrics endpoint is down"
+              description: "The payment metrics endpoint has failed its HTTP probe for 2 minutes."
