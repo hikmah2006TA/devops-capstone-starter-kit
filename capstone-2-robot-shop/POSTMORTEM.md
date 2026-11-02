@@ -58,7 +58,7 @@ Recovery was verified using:
 
 `kubectl get pods -n robot-shop`
 
-The web pod returned with status `Running` and readiness `1/1`. All 12 Robot Shop application pods were subsequently confirmed running.
+The web pod returned with status `Running` and readiness `1/1`. The 11 core Robot Shop deployments were subsequently confirmed ready. The load generator had been intentionally scaled to zero, and an older evicted Shipping pod remained in an error state; its replacement Shipping pod was running and ready.
 
 ## 6. Root Cause and Contributing Factors
 
