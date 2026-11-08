@@ -1,31 +1,68 @@
-## How to Use This Scaffold
+# DevOps Capstone Projects
 
-> [!IMPORTANT]
-> **Starter Kit Guidance & Academic Honesty**
-> 
-> Because baseline starter configurations were not provided for our capstone, this repository provides clean, working architectural templates and configuration scaffolding to help you get unstuck and complete your requirements before the submission deadline.
-> 
-> To ensure you learn the core DevOps and SRE principles and avoid submitting identical work:
-> 1. **Customize Your Infrastructure Settings:** Do not copy-paste identical resource names. Update `capstone-1-voting-app/terraform/variables.tf` to use your own AWS region, cluster name, and node group names.
-> 2. **Set Your Own Container Registry:** In `capstone-1-voting-app/ci-cd/deploy.yml` and `helm/voting-app/values.yaml`, replace Docker Hub image references with your own Docker Hub username and repositories.
-> 3. **Update Alerting URLs:** In `capstone-2-robot-shop/alerts/robot-shop-slo-rules.yaml`, replace `<YOUR_GITHUB_USERNAME>` with your personal GitHub handle for the runbook links.
-> 4. **Execute Your Own SRE Failure Drill:** Do not copy static postmortem timelines or numbers. Trigger the fault injection drill in your own cluster, record your own start and recovery times, and compute your actual error budget consumption.
+This repository contains two DevOps capstone projects completed using AWS, Docker, Kubernetes, CI/CD automation, monitoring, logging, and distributed tracing.
 
----
+## Capstone 1: Voting Application
 
-## Support & Appreciation ⭐
+A containerized voting application deployed to Amazon EKS using Terraform and Helm.
 
-If these templates saved you time, helped you solve tricky EKS issues, or made your capstone easier to complete, please consider:
+**Key technologies:**
+- AWS EKS and Terraform
+- Docker and Docker Hub
+- Kubernetes and Helm
+- GitHub Actions and Trivy
+- Python Flask, C#/.NET, Node.js
+- Redis and PostgreSQL
 
-- Dropping a **Star ⭐** on this repository so other students can easily find it.
-- **Forking 🍴** this repository to use and customize the templates in your own projects.
-- [Following me on GitHub](https://github.com/tamecalm) for more cloud, Kubernetes, and DevOps resources.
+**Key achievements:**
+- Provisioned AWS EKS infrastructure using Terraform.
+- Containerized and deployed the application.
+- Configured a GitHub Actions CI/CD pipeline.
+- Verified Kubernetes deployments and services.
+- Tested Helm upgrades and rollback.
 
+Documentation: [Capstone 1 – Voting Application](capstone-1-voting-app/README.md)
 
-## Capstone Validation
+## Capstone 2: Robot Shop Monitoring and Observability
 
-- Deployed the Voting App to AWS EKS using Helm.
-- Verified voting and result updates.
-- Tested Helm upgrade and rollback.
-- Configured GitHub Actions for Trivy scanning and Docker image builds.
-Good luck with your capstone!
+A microservices monitoring and observability project deployed on Amazon EKS.
+
+**Key technologies:**
+- AWS EKS and Kubernetes
+- Prometheus and Grafana
+- Loki and Fluent Bit
+- Jaeger and OpenTelemetry
+- Blackbox Exporter
+- Alertmanager and Slack
+
+**Key achievements:**
+- Deployed monitoring and observability components.
+- Configured metrics collection and Grafana dashboards.
+- Implemented centralized logging with Loki and Fluent Bit.
+- Verified distributed tracing with Jaeger.
+- Configured alert notifications to Slack.
+- Documented SLOs, error-budget policy, and incident postmortem.
+
+Documentation: [Capstone 2 – Robot Shop](capstone-2-robot-shop/README.md)
+
+## Repository Structure
+
+```text
+devops-capstone-starter-kit/
+├── .github/
+│   └── workflows/
+├── capstone-1-voting-app/
+│   └── README.md
+├── capstone-2-robot-shop/
+│   ├── README.md
+│   └── logging/
+│       └── README.md
+└── README.md
+```
+
+## AWS Environment
+
+- Region: `eu-north-1`
+- EKS Cluster: `voting-app-cluster`
+
+See each capstone's README for its architecture, configuration, deployment instructions, and verification details.
